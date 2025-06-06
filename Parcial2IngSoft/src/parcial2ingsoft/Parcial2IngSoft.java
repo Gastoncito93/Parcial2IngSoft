@@ -50,7 +50,6 @@ public class Parcial2IngSoft {
         // Mostrar saldo de wallets
         System.out.println("Wallet conductor Carlos: $" + carlos.getWallet().getSaldo());
         System.out.println("Wallet pasajero Ana: $" + ana.getWallet().getSaldo());
-    }
-        
-    }
+    }   
+}
     

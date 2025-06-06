@@ -6,18 +6,24 @@ public class Viaje {
 
     public enum Estado { PENDIENTE, CONFIRMADO, CONCLUIDO, CANCELADO }
 
-    private Pasajero pasajero;
     private Conductor conductor;
     private String pickupA;
     private String destinoB;
+    private Estado estado;
     private LocalDateTime fechaHoraPartida;
     private LocalDateTime fechaHoraLlegadaEstimada;
-    private Estado estado;
+    private double monto;
+    private Pasajero pasajero;
     private double distancia; // km
     private double duracion; // minutos
-    private double monto;
     private boolean esParaOtro;
     private String nombreInvitado;
+    
+    
+    
+    
+   
+    
 
     public Viaje(Pasajero pasajero, String pickupA, String destinoB, LocalDateTime fechaHoraPartida,
                  boolean esParaOtro, String nombreInvitado) {
