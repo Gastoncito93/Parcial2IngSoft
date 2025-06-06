@@ -4,10 +4,16 @@
  */
 package parcial2ingsoft;
 
-/**
- *
- * @author Usuario
- */
 public class TarjetaCredito {
-    
+    private String numero;
+    private String vencimiento;
+    private String titular;
+    private String cvv;
+
+    public TarjetaCredito(String numero, String vencimiento, String titular, String cvv) {
+        this.numero = numero;
+        this.vencimiento = vencimiento;
+        this.titular = titular;
+        this.cvv = cvv;
+    }
 }
