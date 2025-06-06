@@ -1,11 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package parcial2ingsoft;
 
 public class Calificacion {
-    private int puntaje; // 1 a 5
+    private int puntaje; // Valor entre 1 y 5
     private String comentario;
     private String fecha;
 
@@ -42,10 +38,17 @@ public class Calificacion {
         this.fecha = fecha;
     }
 
+    // Verifica que el puntaje sea válido (entre 1 y 5)
+    public boolean esValida() {
+        return puntaje >= 1 && puntaje <= 5;
+    }
+    
     @Override
     public String toString() {
-        return "Calificacion{" + "puntaje=" + puntaje + ", comentario=" + comentario + ", fecha=" + fecha + '}';
+        return "Calificacion{" +
+                "puntaje=" + puntaje +
+                ", comentario='" + comentario + '\'' +
+                ", fecha='" + fecha + '\'' +
+                '}';
     }
-
-    
 }

@@ -10,13 +10,34 @@ public class Pasajero extends UsrCuenta {
         super(codCuenta, nombre, email, telefono, password);
         this.tarjetas = new ArrayList<>();
     }
-
-    public void agregarTarjeta(TarjetaCredito tarjeta) {
-        tarjetas.add(tarjeta);
+    public Pasajero() {
+        super();
+        this.tarjetas = new ArrayList<>();
     }
-
+    
+    // Agrega una tarjeta de crédito a la cuenta
+    public void agregarTarjeta(TarjetaCredito tarjeta) {
+        if (tarjeta != null) {
+            tarjetas.add(tarjeta);
+        }
+    }
+    
+    // Permite eliminar una tarjeta de la lista
+    public void eliminarTarjeta(TarjetaCredito tarjeta) {
+        tarjetas.remove(tarjeta);
+    }
+    
     public List<TarjetaCredito> getTarjetas() {
         return tarjetas;
+    }
+
+    // Método para solicitar un viaje; valida que se tenga al menos una tarjeta registrada
+    public Viaje solicitarViaje(String pickupA, String destinoB) {
+        if (tarjetas.isEmpty()) {
+            System.out.println("Error: Debe registrar al menos una tarjeta de crédito para solicitar un viaje.");
+            return null;
+        }
+        return new Viaje(pickupA, destinoB, this);
     }
 
     public int getCodCuenta() {
@@ -69,7 +90,10 @@ public class Pasajero extends UsrCuenta {
 
     @Override
     public String toString() {
-        return "Pasajero{" + "tarjetas=" + tarjetas + '}';
+        return "Pasajero{" +
+                "tarjetas=" + tarjetas +
+                ", " + super.toString() +
+                '}';
     }
     
     

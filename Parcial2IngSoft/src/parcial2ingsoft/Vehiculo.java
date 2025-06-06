@@ -48,10 +48,18 @@ public class Vehiculo {
         this.color = color;
     }
 
+    // Retorna una descripción completa del vehículo
+    public String obtenerDescripcionCompleta() {
+        return "Vehículo: " + marca + " " + modelo + " (Patente: " + patente + ", Color: " + color + ")";
+    }
+
     @Override
     public String toString() {
-        return "Vehiculo{" + "patente=" + patente + ", marca=" + marca + ", modelo=" + modelo + ", color=" + color + '}';
+        return "Vehiculo{" +
+                "patente='" + patente + '\'' +
+                ", marca='" + marca + '\'' +
+                ", modelo='" + modelo + '\'' +
+                ", color='" + color + '\'' +
+                '}';
     }
-    
-    
 }
