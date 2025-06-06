@@ -29,17 +29,18 @@ public class Viaje {
         pasajero.recibirCalificacion(califConductor);
         conductor.recibirCalificacion(califPasajero);
     }
-
+    
     public String getPickupA() {
-        return pickupA;
-    }
-
-    public void setPickupA(String pickupA) {
-        this.pickupA = pickupA;
-    }
+    return pickupA;
+}
 
     public String getDestinoB() {
         return destinoB;
+    }
+
+
+    public void setPickupA(String pickupA) {
+        this.pickupA = pickupA;
     }
 
     public void setDestinoB(String destinoB) {

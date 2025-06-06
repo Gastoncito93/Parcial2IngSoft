@@ -4,6 +4,7 @@ public class Conductor extends UsrCuenta {
     private String nroLicencia;
     private Vehiculo vehiculo;
     private Wallet wallet;
+    private Viaje viajeActual;
 
     public Conductor(int codCuenta, String nombre, String email, String telefono, String password,
                      String nroLicencia, Vehiculo vehiculo, Wallet wallet) {
@@ -11,10 +12,54 @@ public class Conductor extends UsrCuenta {
         this.nroLicencia = nroLicencia;
         this.vehiculo = vehiculo;
         this.wallet = wallet;
+        this.viajeActual = null;
     }
 
-    public Conductor(int codCuenta, String nombre, String email, String telefono, String password) {
-        super(codCuenta, nombre, email, telefono, password);
+    public void recibirSolicitud(Viaje viaje) {
+        System.out.println("Nueva solicitud de viaje recibida.");
+        this.viajeActual = viaje;
+    }
+
+    public void verInfoViaje() {
+        if (viajeActual != null) {
+            System.out.println("Pickup: " + viajeActual.getPickupA());
+            System.out.println("Destino: " + viajeActual.getDestinoB());
+            // (Agregar tarifa estimada si el sistema la calcula)
+        }
+    }
+
+    public void aceptarSolicitud() {
+        if (viajeActual != null) {
+            viajeActual.asignarConductor(this);
+            System.out.println("Solicitud aceptada.");
+        }
+    }
+
+    public void llegarAlPasajero() {
+        System.out.println("Llegaste al punto de recogida.");
+    }
+
+    public void iniciarViaje() {
+        System.out.println("Viaje iniciado.");
+    }
+
+    public void realizarViaje() {
+        System.out.println("Conduciendo hacia el destino...");
+    }
+
+    public void finalizarViaje(Calificacion califPasajero, Calificacion califConductor) {
+        viajeActual.finalizarViaje(califPasajero, califConductor);
+        System.out.println("Viaje finalizado.");
+        wallet.agregarMonto(500); // ejemplo de dinero recibido
+        viajeActual = null;
+    }
+
+    public Vehiculo getVehiculo() {
+        return vehiculo;
+    }
+
+    public Wallet getWallet() {
+        return wallet;
     }
 
     public String getNroLicencia() {
@@ -25,26 +70,19 @@ public class Conductor extends UsrCuenta {
         this.nroLicencia = nroLicencia;
     }
 
-    public Vehiculo getVehiculo() {
-        return vehiculo;
+    public Viaje getViajeActual() {
+        return viajeActual;
     }
 
-    public void setVehiculo(Vehiculo vehiculo) {
-        this.vehiculo = vehiculo;
+    public void setViajeActual(Viaje viajeActual) {
+        this.viajeActual = viajeActual;
     }
-
-    public Wallet getWallet() {
-        return wallet;
-    }
-
-    public void setWallet(Wallet wallet) {
-        this.wallet = wallet;
-    }
-
-    @Override
-    public String toString() {
-        return "Conductor{" + "nroLicencia=" + nroLicencia + ", vehiculo=" + vehiculo + ", wallet=" + wallet + '}';
-    }
-
+    
     
 }
+
+
+   
+
+    
+
