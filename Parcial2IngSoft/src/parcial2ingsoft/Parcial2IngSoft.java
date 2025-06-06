@@ -4,6 +4,10 @@
  */
 package parcial2ingsoft;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author Usuario
@@ -11,26 +15,42 @@ package parcial2ingsoft;
 public class Parcial2IngSoft {
 
     public static void main(String[] args) {
-        Vehiculo vehiculo = new Vehiculo("ABC123", "Toyota", "Corolla", "Blanco");
-        Wallet wallet = new Wallet();
-        Conductor conductor = new Conductor(1, "Carlos", "carlos@mail.com", "123456789", "pass123",
-                                            "LIC123", vehiculo, wallet);
+        // Crear pasajero
+        Pasajero ana = new Pasajero(1, "Ana López", "ana@mail.com", "1122334455", "clave123");
+        ana.agregarTarjeta(new TarjetaCredito("1234567890123456", "Ana López", "12/26", "123"));
 
-        Pasajero pasajero = new Pasajero(2, "Ana", "ana@mail.com", "987654321", "clave123");
-        Viaje viaje = new Viaje("Av. Siempre Viva 123", "Calle Falsa 456", pasajero);
+        // Crear vehículo y conductor
+        Vehiculo auto1 = new Vehiculo("AB123CD", "Toyota", "Corolla", "Blanco");
+        Conductor carlos = new Conductor(2, "Carlos Pérez", "carlos@uber.com", "1199988877", "clave456", "LIC001", auto1);
 
-        // Simular flujo de Uber Driver
-        conductor.recibirSolicitud(viaje);
-        conductor.verInfoViaje();
-        conductor.aceptarSolicitud();
-        conductor.llegarAlPasajero();
-        conductor.iniciarViaje();
-        conductor.realizarViaje();
+        // Lista de conductores disponibles
+        List<Conductor> conductores = new ArrayList<>();
+        conductores.add(carlos);
 
-        Calificacion califPasajero = new Calificacion(5, "Muy buen viaje", "06/06/2025");
-        Calificacion califConductor = new Calificacion(5, "Excelente pasajero", "06/06/2025");
+        // Crear sistema centralizado
+        SistemaUber uber = new SistemaUber(conductores);
 
-        conductor.finalizarViaje(califPasajero, califConductor);
+        // Simular pedido de viaje (7:30am con cargo de $900 y es en la madrugada)
+        LocalDateTime salida = LocalDateTime.of(2025, 6, 7, 7, 30); // 7:30 hs
+        Viaje viaje = uber.pedirViaje(ana, "Av. Siempre Viva 742", "Calle Falsa 123", salida, false, "");
+
+        System.out.println("Monto calculado del viaje: $" + viaje.getMonto());
+        System.out.println("Estado del viaje: " + viaje.getEstado());
+
+        // Finalizar viaje
+        viaje.finalizar();
+
+        // Calificaciones
+        ana.agregarCalificacion(5);
+        carlos.agregarCalificacion(4);
+
+        System.out.println("Promedio pasajero Ana: " + ana.getPromedio());
+        System.out.println("Promedio conductor Carlos: " + carlos.getPromedio());
+
+        // Mostrar saldo de wallets
+        System.out.println("Wallet conductor Carlos: $" + carlos.getWallet().getSaldo());
+        System.out.println("Wallet pasajero Ana: $" + ana.getWallet().getSaldo());
     }
-}
+        
+    }
     

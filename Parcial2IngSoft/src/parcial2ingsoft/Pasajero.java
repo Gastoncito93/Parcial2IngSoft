@@ -1,100 +1,45 @@
 package parcial2ingsoft;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Pasajero extends UsrCuenta {
     private List<TarjetaCredito> tarjetas;
+    private Wallet wallet;
+    private int cantidadViajes;
+    private int viajesMadrugada;
 
     public Pasajero(int codCuenta, String nombre, String email, String telefono, String password) {
         super(codCuenta, nombre, email, telefono, password);
         this.tarjetas = new ArrayList<>();
+        this.wallet = new Wallet();
     }
-    public Pasajero() {
-        super();
-        this.tarjetas = new ArrayList<>();
-    }
-    
-    // Agrega una tarjeta de crédito a la cuenta
+
     public void agregarTarjeta(TarjetaCredito tarjeta) {
-        if (tarjeta != null) {
-            tarjetas.add(tarjeta);
+        tarjetas.add(tarjeta);
+    }
+
+    public boolean tieneMedioPago() {
+        return !tarjetas.isEmpty();
+    }
+
+    public void registrarViaje(LocalDateTime fechaHoraPartida) {
+        cantidadViajes++;
+        if (fechaHoraPartida.getHour() >= 4 && fechaHoraPartida.getHour() < 8) {
+            viajesMadrugada++;
         }
-    }
-    
-    // Permite eliminar una tarjeta de la lista
-    public void eliminarTarjeta(TarjetaCredito tarjeta) {
-        tarjetas.remove(tarjeta);
-    }
-    
-    public List<TarjetaCredito> getTarjetas() {
-        return tarjetas;
+        verificarBonos();
     }
 
-    // Método para solicitar un viaje; valida que se tenga al menos una tarjeta registrada
-    public Viaje solicitarViaje(String pickupA, String destinoB) {
-        if (tarjetas.isEmpty()) {
-            System.out.println("Error: Debe registrar al menos una tarjeta de crédito para solicitar un viaje.");
-            return null;
-        }
-        return new Viaje(pickupA, destinoB, this);
+    private void verificarBonos() {
+        if (cantidadViajes == 8) wallet.agregarMonto(8000);
+        if (cantidadViajes == 17) wallet.agregarMonto(20000);
+        if (cantidadViajes == 28) wallet.agregarMonto(40000);
+        if (viajesMadrugada == 4) wallet.agregarMonto(8000);
     }
 
-    public int getCodCuenta() {
-        return codCuenta;
+    public Wallet getWallet() {
+        return wallet;
     }
-
-    public void setCodCuenta(int codCuenta) {
-        this.codCuenta = codCuenta;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getTelefono() {
-        return telefono;
-    }
-
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public double getPromedioCalificacion() {
-        return promedioCalificacion;
-    }
-
-    public void setPromedioCalificacion(double promedioCalificacion) {
-        this.promedioCalificacion = promedioCalificacion;
-    }
-
-    @Override
-    public String toString() {
-        return "Pasajero{" +
-                "tarjetas=" + tarjetas +
-                ", " + super.toString() +
-                '}';
-    }
-    
-    
 }

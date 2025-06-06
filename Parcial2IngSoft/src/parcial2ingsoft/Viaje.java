@@ -1,120 +1,78 @@
 package parcial2ingsoft;
 
+import java.time.LocalDateTime;
+
 public class Viaje {
-    private String pickupA;
-    private String destinoB;
-    private String estado; // Ej: "Pendiente", "Aceptado", "Finalizado", "Cancelado"
+
+    public enum Estado { PENDIENTE, CONFIRMADO, CONCLUIDO, CANCELADO }
+
     private Pasajero pasajero;
     private Conductor conductor;
-    private Calificacion calificacionPasajero;
-    private Calificacion calificacionConductor;
+    private String pickupA;
+    private String destinoB;
+    private LocalDateTime fechaHoraPartida;
+    private LocalDateTime fechaHoraLlegadaEstimada;
+    private Estado estado;
+    private double distancia; // km
+    private double duracion; // minutos
+    private double monto;
+    private boolean esParaOtro;
+    private String nombreInvitado;
 
-    public Viaje(String pickupA, String destinoB, Pasajero pasajero) {
+    public Viaje(Pasajero pasajero, String pickupA, String destinoB, LocalDateTime fechaHoraPartida,
+                 boolean esParaOtro, String nombreInvitado) {
+        this.pasajero = pasajero;
         this.pickupA = pickupA;
         this.destinoB = destinoB;
-        this.pasajero = pasajero;
-        this.estado = "Pendiente";
-    }
-    
-    public Viaje() {
+        this.fechaHoraPartida = fechaHoraPartida;
+        this.estado = Estado.PENDIENTE;
+        this.esParaOtro = esParaOtro;
+        this.nombreInvitado = nombreInvitado;
+
+        calcularRutaYPrecio();
     }
 
-    public String getPickupA() {
-        return pickupA;
+    private void calcularRutaYPrecio() {
+        this.distancia = 10; // Simulado
+        this.duracion = 20;
+        this.fechaHoraLlegadaEstimada = fechaHoraPartida.plusMinutes((long) duracion);
+        double tarifaBase = 500;
+        double tarifaKm = 80;
+        double tarifaMin = 30;
+        double cargoDemanda = obtenerCargoPorFranja(fechaHoraPartida.getHour());
+        this.monto = tarifaBase + (tarifaKm * distancia) + (tarifaMin * duracion) + cargoDemanda;
     }
 
-    public void setPickupA(String pickupA) {
-        this.pickupA = pickupA;
+    private double obtenerCargoPorFranja(int hora) {
+        if (hora >= 7 && hora < 13) return 900;
+        if (hora >= 13 && hora < 19) return 1300;
+        if (hora >= 19 || hora < 1) return 700;
+        return 1250; // madrugada
     }
 
-    public String getDestinoB() {
-        return destinoB;
+    public void asignarConductor(Conductor c) {
+        this.conductor = c;
+        this.estado = Estado.CONFIRMADO;
     }
 
-    public void setDestinoB(String destinoB) {
-        this.destinoB = destinoB;
+    public void finalizar() {
+        this.estado = Estado.CONCLUIDO;
+        pasajero.registrarViaje(fechaHoraPartida);
+        conductor.getWallet().agregarMonto(monto);
     }
 
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
-
-    public Pasajero getPasajero() {
-        return pasajero;
-    }
-
-    public void setPasajero(Pasajero pasajero) {
-        this.pasajero = pasajero;
-    }
-
-    public Conductor getConductor() {
-        return conductor;
-    }
-
-    public void setConductor(Conductor conductor) {
-        this.conductor = conductor;
-    }
-
-    public Calificacion getCalificacionPasajero() {
-        return calificacionPasajero;
-    }
-
-    public void setCalificacionPasajero(Calificacion calificacionPasajero) {
-        this.calificacionPasajero = calificacionPasajero;
-    }
-
-    public Calificacion getCalificacionConductor() {
-        return calificacionConductor;
-    }
-
-    public void setCalificacionConductor(Calificacion calificacionConductor) {
-        this.calificacionConductor = calificacionConductor;
-    }
-
-    // Asigna un conductor al viaje y actualiza el estado
-    public void asignarConductor(Conductor conductor) {
-        this.conductor = conductor;
-        this.estado = "Aceptado";
-    }
-
-    // Finaliza el viaje y registra las calificaciones correspondientes
-    public void finalizarViaje(Calificacion califPasajero, Calificacion califConductor) {
-        this.estado = "Finalizado";
-        this.calificacionPasajero = califPasajero;
-        this.calificacionConductor = califConductor;
-
-        pasajero.recibirCalificacion(califConductor);
-        conductor.recibirCalificacion(califPasajero);
-    }
-    
-    // Permite cancelar el viaje con un motivo
-    public void cancelarViaje(String motivo) {
-        this.estado = "Cancelado";
-        System.out.println("Viaje cancelado: " + motivo);
-    }
-    
-    // Calcula la tarifa del viaje según la fórmula:
-    // Precio = Tarifa Base + (Tarifa por Distancia * Distancia) + (Tarifa por Tiempo * Tiempo) + Cargo por Demanda
-    public double calcularTarifa(double tarifaBase, double tarifaDistancia, double distancia, double tarifaTiempo, double tiempo, double cargoDemanda) {
-        return tarifaBase + (tarifaDistancia * distancia) + (tarifaTiempo * tiempo) + cargoDemanda;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Viaje{");
-        sb.append("pickupA='").append(pickupA).append('\'');
-        sb.append(", destinoB='").append(destinoB).append('\'');
-        sb.append(", estado='").append(estado).append('\'');
-        sb.append(", pasajero=").append(pasajero.getNombre());
-        if (conductor != null) {
-            sb.append(", conductor=").append(conductor.getNombre());
+    public void cancelar(boolean penalizado) {
+        this.estado = Estado.CANCELADO;
+        if (penalizado) {
+            System.out.println("Se aplica penalización por cancelación.");
         }
-        sb.append('}');
-        return sb.toString();
+    }
+
+    public double getMonto() {
+        return monto;
+    }
+
+    public Estado getEstado() {
+        return estado;
     }
 }
